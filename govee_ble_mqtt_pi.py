@@ -27,6 +27,8 @@ from time import gmtime, strftime, sleep
 from bluepy.btle import Scanner, DefaultDelegate, BTLEException
 import sys
 import paho.mqtt.client as mqtt
+import json
+
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
@@ -35,8 +37,8 @@ def on_message(client, userdata, msg):
     print("on message")
     
 client = mqtt.Client()
-mqtt_prefix = "/sensor/govee"
-mqtt_gateway_name = "/upstairs/"
+mqtt_prefix = "sensor/govee"
+mqtt_gateway_name = "/hopfenstr8/"
 
 class ScanDelegate(DefaultDelegate):
     
@@ -47,21 +49,22 @@ class ScanDelegate(DefaultDelegate):
     
     def handleDiscovery(self, dev, isNewDev, isNewData):
         #if (dev.addr == "a4:c1:38:xx:xx:xx") or (dev.addr == "a4:c1:38:xx:xx:xx"):
-        if dev.addr[:8]=="a4:c1:38":          
+        if dev.addr[:8]=="a4:c1:38":
             
             #returns a list, of which the [2] item of the [3] tupple is manufacturing data
             adv_list = dev.getScanData()
+            client.publish("debug-object", json.dumps(adv_list), qos=0)
+
+            adv_manuf_data = adv_list[3][2]
             
-            adv_manuf_data = adv_list[2][2]
-            
-            #print("manuf data = ", adv_manuf_data)
+            print("manuf data = ", adv_manuf_data)
 
             #this is the location of the encoded temp/humidity and battery data
             temp_hum_data = adv_manuf_data[6:12]
             battery = adv_manuf_data[12:14]
             
             #convert to integer
-            val = (int(temp_hum_data, 16))
+            val = 0 if temp_hum_data == '' else int(temp_hum_data, 16)
 
             #decode tip from eharris: https://github.com/Thrilleratplay/GoveeWatcher/issues/2
             is_negative = False
@@ -98,9 +101,11 @@ class ScanDelegate(DefaultDelegate):
             mqtt_topic = mqtt_prefix + mqtt_gateway_name + mac + "/"
 
             client.publish(mqtt_topic+"rssi", signal, qos=0)
+            client.publish(mqtt_topic+"temp_C", temp_C, qos=0)
             client.publish(mqtt_topic+"temp_F", temp_F, qos=0)
             client.publish(mqtt_topic+"hum", hum_percent, qos=0)
             client.publish(mqtt_topic+"battery_pct", battery_percent, qos=0)
+            client.publish(mqtt_topic+"object", json.dumps(adv_list), qos=0)
             
             sys.stdout.flush()
 
