@@ -38,7 +38,7 @@ def on_message(client, userdata, msg):
     
 client = mqtt.Client()
 mqtt_prefix = "sensor/govee"
-mqtt_gateway_name = "/hopfenstr8/"
+mqtt_gateway_name = "/second-floor/"
 
 class ScanDelegate(DefaultDelegate):
     
