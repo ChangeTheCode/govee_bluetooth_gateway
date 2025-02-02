@@ -35,5 +35,8 @@ Reload systemd deamon
 enable service in systemd 
 > sudo systemctl enable govee_ble_mqtt.service
 
+Check if service runs correctly 
+> sudo journalctl -u govee_ble_mqtt.service -f
+
 start systemd service 
 > sudo systemctl start govee_ble_mqtt.service
