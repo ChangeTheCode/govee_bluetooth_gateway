@@ -23,3 +23,17 @@ I'm also interested in how the freezer behaves.  How the temperature fluctuates,
   I'll update the energy usage once the freezer is more full of food.  I'll also update when I get battery life data.  The Govee bluetooth sensor unfortunately sends out updates way more often than necessary (every couple of seconds).  So the added battery capacity from the AAA batteries may be somewhat negated by the excess data transmissions.
   
 The chest freezer isn't blocking the signal too much.  The Pi gateway is one level up and one room over from the chest freezer location, and I'm able to receive 3 out of 5 advertisements on average.
+
+## Install python as service in systemd
+
+copy service filt to the destination 
+> sudo cp govee_ble_mqtt.service /etc/systemd/system/govee_ble_mqtt.service
+
+Reload systemd deamon 
+> sudo systemctl daemon-reload
+
+enable service in systemd 
+> sudo systemctl enable govee_ble_mqtt.service
+
+start systemd service 
+> sudo systemctl start govee_ble_mqtt.service
