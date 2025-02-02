@@ -40,3 +40,6 @@ Check if service runs correctly
 
 start systemd service 
 > sudo systemctl start govee_ble_mqtt.service
+
+check if service runs correctly 
+> sudo journalctl -u govee_ble_mqtt.service -f
