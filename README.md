@@ -43,3 +43,16 @@ start systemd service
 
 check if service runs correctly 
 > sudo journalctl -u govee_ble_mqtt.service -f
+
+## Configure virtual python env. 
+
+virtual environment create:
+> python3 -m venv ~/bluepy-env
+
+virtual environment activate:
+> source ~/bluepy-env/bin/activate
+
+install bluepy in virtual environment:
+>pip install bluepy
+
+
