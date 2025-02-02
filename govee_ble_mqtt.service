@@ -1,0 +1,16 @@
+[Unit]
+Description=Govee Bluetooth MQTT Gateway
+After=network.target bluetooth.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/home/pi/bluepy-env/bin/python /home/pi/govee_bluetooth_gateway/govee_ble_mqtt_pi.py
+WorkingDirectory=/home/pi/govee_bluetooth_gateway
+User=root
+Group=root
+Restart=on-failure
+Environment="PYTHONUNBUFFERED=1"
+
+[Install]
+WantedBy=multi-user.target
+
